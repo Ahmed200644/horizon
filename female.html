@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/all.min.css" />
+    <link rel="stylesheet" href="css/framework.css" />
+    <link rel="stylesheet" href="css/master.css" />
+    <link rel="stylesheet" href="css/elzero.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500&display=swap"
+      rel="stylesheet"
+    />
+    		<!-- Favicon -->
+		<link rel="icon" href="/imgs/landing.png" type="image/png" />
+
+    <style>
+      /* Add some custom styles */
+      .governorate-selection {
+        margin: 20px 0;
+      }
+
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #4CAF50; /* Green border */
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #f9f9f9; /* Light background */
+        transition: border-color 0.3s;
+      }
+
+      select:focus {
+        border-color: #45a049; /* Darker green on focus */
+        outline: none; /* Remove default outline */
+      }
+
+      button.start {
+        background-color: #4CAF50; /* Green */
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button.start:hover {
+        background-color: #45a049; /* Darker green on hover */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page d-flex">
+      <div class="content w-full">
+        <!-- start Header -->
+        <div class="header" id="header">
+          <div class="container">
+            <img class="logo" src="./imgs/green-horizon-logoo.png" alt="">
+            <ul class="main-nav">
+              <li><a href="team.html">Team Members</a></li>
+              <li><a href="index.html">Green Horizon</a></li>
+                </ul>
+          </div>
+        </div>
+        <!-- End Header -->
+        <div class="wrapper d-grid gap-20">
+          <!-- Start Quick Draft Widget -->
+          <div class="quick-draft p-20 rad-10">
+            <h2 class="Green-Horizon">Select Your Governorate</h2>
+            <div class="governorate-selection">
+              <label for="governorate">Select a governorate <strong>(or let GPS select your governorate)</strong></label>
+              <select id="governorate" name="governorate"></select>
+            </div>
+            <button id="confirm" class="start">Confirm Location</button>
+          </div>
+          <!-- End Quick Draft Widget -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const governorates = [
+        { name: "Cairo", file: "Cairo.html" },
+        { name: "Giza", file: "Giza.html" },
+        { name: "Alexandria", file: "Alexandria.html" },
+        { name: "Luxor", file: "Luxor.html" },
+        { name: "Aswan", file: "Aswan.html" },
+        { name: "Hurghada", file: "Hurghada.html" },
+        { name: "Suez", file: "Suez.html" },
+        { name: "Port Said", file: "Port_Said.html" },
+        { name: "Dakahlia", file: "Dakahlia.html" },
+        { name: "Sharqia", file: "Sharqia.html" },
+        { name: "Kafr El Sheikh", file: "Kafr_El_Sheikh.html" },
+        { name: "Behira", file: "Behira.html" },
+        { name: "Fayoum", file: "Fayoum.html" },
+        { name: "Minya", file: "Minya.html" },
+        { name: "Beni Suef", file: "Beni_Suef.html" },
+        { name: "Assiut", file: "Assiut.html" },
+        { name: "Sohag", file: "Sohag.html" },
+        { name: "Qena", file: "Qena.html" },
+        { name: "Aswan", file: "Aswan.html" },
+        { name: "Matruh", file: "Matruh.html" },
+        { name: "North Sinai", file: "North_Sinai.html" },
+        { name: "South Sinai", file: "South_Sinai.html" },
+        { name: "Red Sea", file: "Red_Sea.html" },
+        { name: "New Valley", file: "New_Valley.html" },
+        { name: "Ismailia", file: "Ismailia.html" },
+        { name: "Gharbia", file: "Gharbia.html" },
+        { name: "Qalyubia", file: "Qalyubia.html" },
+        { name: "Menoufia", file: "Menoufia.html" },
+      ];
+
+      // Function to match the user's coordinates to a governorate
+      function getGovernorateByCoordinates(latitude, longitude) {
+        // Mapping coordinates to governorates
+        if (latitude >= 30 && latitude <= 31 && longitude >= 31 && longitude <= 32) {
+          return "Cairo";
+        } else if (latitude >= 29 && latitude <= 30 && longitude >= 30 && longitude <= 31) {
+          return "Giza";
+        } else if (latitude >= 31 && latitude <= 32 && longitude >= 29 && longitude <= 30) {
+          return "Alexandria";
+        }
+        // Add more mappings for other governorates
+        return null;
+      }
+
+      // Function to get the user's current position
+      function autoSelectGovernorate() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const governorate = getGovernorateByCoordinates(latitude, longitude);
+            
+            if (governorate) {
+              document.getElementById("governorate").value = governorate;
+            } else {
+              alert("Your location could not be matched to a governorate.");
+            }
+          }, function() {
+            alert("Geolocation services are not enabled.");
+          });
+        } else {
+          alert("Geolocation is not supported by your browser.");
+        }
+      }
+
+      // Function to populate the governorate selection dropdown
+      function populateGovernorateSelection() {
+        const governorateSelect = document.getElementById("governorate");
+
+        governorates.forEach(governorate => {
+          // Populate dropdown
+          const option = document.createElement("option");
+          option.value = governorate.name;
+          option.textContent = governorate.name;
+          governorateSelect.appendChild(option);
+        });
+      }
+
+      // Function to handle governorate selection
+      document.getElementById("confirm").onclick = function() {
+        const selectedGovernorate = document.getElementById("governorate").value;
+        // Redirect to the corresponding governorate page
+        window.location.href = `gov/${selectedGovernorate}.html`;
+      };
+
+      // Call the functions on page load
+      window.onload = function() {
+        autoSelectGovernorate();
+        populateGovernorateSelection();
+      };
+    </script>
+  </body>
+</html>
